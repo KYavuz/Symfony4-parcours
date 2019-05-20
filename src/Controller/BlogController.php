@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Article;
+use App\Entity\Category;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,5 +38,26 @@ class BlogController extends AbstractController
         return $this->render('blog/show.html.twig', [
             'slug' => $slug,
         ]);
+    }
+
+    /**
+     * @param string $categoryName
+     * @return Response
+     *  @Route("/category/{categoryName}", name="show_category")
+     */
+    public function showByCategory(string $categoryName)
+    {
+        $category = $this->getDoctrine()->getRepository( Category::class)->findOneBy(['name'=>$categoryName]);
+        $articles = $this->getDoctrine()->getRepository(Article::class)->findBy(['category'=>$category->getId()],null,3);
+
+        //$category = $this->getDoctrine()->getRepository( Category::class):
+        //$articles = $category->getArticles();
+
+        return $this->render('blog/category.html.twig',
+            [
+                'category' => $categoryName,
+                'articles' => $articles
+            ]
+        );
     }
 }

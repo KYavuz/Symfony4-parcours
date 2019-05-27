@@ -39,6 +39,11 @@ class Article
      */
     private $tag_id;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $slug;
+
     public function __construct()
     {
         $this->tag_id = new ArrayCollection();
@@ -107,6 +112,18 @@ class Article
         if ($this->tag_id->contains($tagId)) {
             $this->tag_id->removeElement($tagId);
         }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

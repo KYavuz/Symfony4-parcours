@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +33,16 @@ class Article
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Tag", inversedBy="articles")
+     */
+    private $tag_id;
+
+    public function __construct()
+    {
+        $this->tag_id = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -69,6 +81,32 @@ class Article
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tag[]
+     */
+    public function getTagId(): Collection
+    {
+        return $this->tag_id;
+    }
+
+    public function addTagId(Tag $tagId): self
+    {
+        if (!$this->tag_id->contains($tagId)) {
+            $this->tag_id[] = $tagId;
+        }
+
+        return $this;
+    }
+
+    public function removeTagId(Tag $tagId): self
+    {
+        if ($this->tag_id->contains($tagId)) {
+            $this->tag_id->removeElement($tagId);
+        }
 
         return $this;
     }

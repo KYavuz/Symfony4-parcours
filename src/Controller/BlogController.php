@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Tag;
 use App\Entity\Category;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,8 +36,19 @@ class BlogController extends AbstractController
 
         $slug = ucwords(str_replace('-', ' ', $slug));
 
+        $article = $this->getDoctrine()
+            ->getRepository(Article::class)
+            ->findOneBy(['title' => mb_strtolower($slug)]);
+
+        $tags = $article->getTagId();
+
+        $category = $article->getCategory();
+
         return $this->render('blog/show.html.twig', [
             'slug' => $slug,
+            'tags' => $tags,
+            'article' => $article,
+            'category' => $category
         ]);
     }
 
@@ -59,5 +71,14 @@ class BlogController extends AbstractController
         );
     }
 
-
+    /**
+     * @Route("/tag/{name}", name="tag_show")
+     */
+    public function showTag(Tag $tag): Response
+    {
+        return $this->render('blog/tag.html.twig', [
+            'article' => $tag -> getArticles(),
+            'tag' => $tag -> getName()
+        ]);
+    }
 }

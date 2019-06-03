@@ -48,7 +48,7 @@ class BlogController extends AbstractController
     public function showByCategory(string $categoryName)
     {
         $category = $this->getDoctrine()->getRepository( Category::class)->findOneBy(['name'=>$categoryName]);
-        $articles = $this->getDoctrine()->getRepository(Article::class)->findBy(['category'=>$category->getId()],null,3);
+        $articles = $this->getDoctrine()->getRepository(Article::class)->findBy(['category'=>$category->getId()],['id' => 'DESC'],3);
 
         //$category = $this->getDoctrine()->getRepository( Category::class):
         //$articles = $category->getArticles();
